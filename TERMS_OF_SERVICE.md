@@ -3,12 +3,6 @@
 **Effective Date:** May 16, 2026
 **Last Updated:** May 16, 2026
 
----
-
-> **Draft notice:** This document is a working draft prepared for review by qualified legal counsel before publication. The disclaimer, limitation of liability, indemnification, and dispute resolution sections in particular should be reviewed by a lawyer to confirm they are enforceable in your jurisdiction and adequate for your risk profile.
-
----
-
 ## 1. Acceptance of Terms
 
 By downloading, installing, or using the iOS application Hifz Musaa'id ("the App"), you agree to be bound by these Terms of Service ("Terms") and by the **Apple Licensed Application End User License Agreement** ("Apple EULA"), available at https://www.apple.com/legal/internet-services/itunes/dev/stdeula/, which is incorporated into these Terms by reference.

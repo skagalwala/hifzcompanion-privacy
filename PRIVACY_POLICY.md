@@ -3,11 +3,6 @@
 **Effective Date:** May 16, 2026
 **Last Updated:** May 16, 2026
 
----
-
-> **Draft notice:** This document is a working draft prepared for review by qualified legal counsel before publication. The clauses below describe the app's actual data practices as of the effective date, but legal sufficiency in your jurisdiction is a separate question that a lawyer should sign off on — particularly the limitation-of-liability, indemnification, and governing-law sections.
-
----
 
 ## 1. Introduction
 

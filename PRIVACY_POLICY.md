@@ -1,7 +1,7 @@
 # Privacy Policy — Hifz Musaa'id
 
 **Effective Date:** May 24, 2026
-**Last Updated:** May 24, 2026
+**Last Updated:** May 25, 2026
 
 
 ## 1. Introduction
@@ -20,7 +20,7 @@ If you have questions about this policy or about how your information is handled
 
 - A unique, Apple-issued user identifier (a string opaque to us — not your Apple ID email or username).
 - Your email address. Depending on what you choose in Apple's sign-in sheet, this may be your real email or an Apple-relay email that forwards to your real address.
-- Your name (first and last), if and only if you choose to share it in the Apple sign-in sheet. You can choose to omit it; the App functions normally without it.
+- Your name (first and last), if and only if you choose to share it in the Apple sign-in sheet. You can choose to omit it; the App functions normally without it. **Apple shares the name only on the very first authorization of the App against your Apple ID.** Subsequent sign-ins (on the same device or on additional devices) do not return the name from Apple, regardless of what you originally chose. If you choose to share your name on first sign-in, we store it locally on your device (in standard application preferences — not the secure Keychain, since the name is not a credential) and also save it to your account record on our backend (Supabase `auth.users` user-metadata, a field gated by row-level security). The reason we save it to our backend is so that if you sign in on a second device, your name carries over automatically without you having to type it again — Apple itself will not re-share the name on the second device. If you'd prefer we do not save your name, choose "Don't share" in the Apple sign-in sheet on first sign-in; the App will still function and will simply ask you to type a display name once during in-app onboarding.
 
 We never see your Apple ID password and have no way to authenticate you outside the Apple sign-in flow.
 
@@ -61,6 +61,7 @@ We use the limited information described above only for the following purposes:
 - **Subscription delivery** — confirming via Apple StoreKit (iOS) or Google Play Billing (Android) that your Lite or Pro entitlement is active and serving you the corresponding tier of features.
 - **Activation code validation** — verifying that codes you redeem are valid, unused (or within their per-code redemption limit), and not expired.
 - **Audio content delivery** — fetching Quran recitation audio files from our content delivery network when you build a program.
+- **In-App personalization** — if you shared your name through Sign in with Apple, we use it to greet you in onboarding and on home screens (e.g., "Assalamu Alaikum, Ahmed"). This is the only purpose for which your name is used. We never include your name in marketing communications, ads, or any third-party transmission.
 - **Service operation and security** — preventing abuse of our backend (rate limiting), debugging crashes, and improving the App's reliability.
 
 We do not use your information for advertising, profiling, automated decision-making about you, or any commercial purpose beyond operating the App you paid for.
@@ -73,7 +74,7 @@ We share information only with the following parties, and only for the purposes 
 
 **Google LLC.** — On Android, Google processes your subscription purchases and free trial activations through Google Play Billing, distributes the App through the Google Play Store, and provides the Google Play Services infrastructure that the App's billing client depends on. Google receives information necessary to do this directly from you (Google account, payment information, device information used for license verification), not from us. Google may also collect device-level diagnostic information about App stability if you have opted in to share diagnostic data with Google. Google's handling of your data is governed by Google's privacy policy: <https://policies.google.com/privacy>.
 
-**Supabase, Inc.** — Our backend (database, authentication, edge functions, content storage) is hosted by Supabase, Inc., a U.S.-based service provider. Supabase processes activation verifications, device identifiers, in-app-purchase receipt validations, and signed audio file URLs on our behalf under a data processing agreement. Supabase does not use the data for its own purposes. Supabase's privacy policy: <https://supabase.com/privacy>.
+**Supabase, Inc.** — Our backend (database, authentication, edge functions, content storage) is hosted by Supabase, Inc., a U.S.-based service provider. Supabase processes activation verifications, device identifiers, in-app-purchase receipt validations, signed audio file URLs, and — if you chose to share your name through Sign in with Apple — your display name (saved to the `user_metadata.full_name` field of your account record so it follows your Apple ID across devices). All processing is on our behalf under a data processing agreement. Supabase does not use the data for its own purposes. Supabase's privacy policy: <https://supabase.com/privacy>.
 
 **Quran.com API (iOS only, incidental, fallback only).** On iOS, if our bundled Arabic text data does not contain a specific verse you view (rare), the App may fetch the verse text from the public Quran.com API. These requests are made directly from your device and include only the verse identifier (e.g., "67:1"). No personal information is sent to Quran.com. The Android App does not include this fallback at present; all Arabic text is bundled.
 
@@ -86,9 +87,9 @@ We may disclose your information to comply with a valid legal process (subpoena,
 We protect your information using industry-standard practices:
 
 - **In transit:** All network traffic between the App and our backend uses HTTPS with TLS 1.2 or newer. On iOS, App Transport Security is enabled and we do not allow exceptions. On Android, network security configuration enforces TLS and blocks cleartext HTTP traffic for all production hosts.
-- **At rest on your device — iOS:** Sensitive information (your auth tokens, activation code, device identifier) is stored in iOS Keychain, which is encrypted by hardware. Downloaded audio files are stored on disk encrypted with AES-256-GCM under filenames generated by HMAC-SHA-256; plaintext audio bytes never touch the filesystem.
-- **At rest on your device — Android:** Sensitive information (your auth tokens, activation code, device identifier) is stored in `EncryptedSharedPreferences`, backed by the Android Keystore. Keys are 256-bit AES-GCM managed by Google's Tink library; the underlying key material is hardware-bound on devices that support the Android Keymaster HAL. Downloaded audio files are stored on disk encrypted with AES-256-GCM under filenames generated by HMAC-SHA-256; plaintext audio bytes never touch the filesystem. This matches the iOS implementation byte-for-byte.
-- **At rest on our servers:** Supabase encrypts data at rest. Access to the database is restricted to the operator and is gated behind row-level security policies and a service-role key that is never embedded in the App.
+- **At rest on your device — iOS:** Sensitive information (your auth tokens, activation code, device identifier) is stored in iOS Keychain, which is encrypted by hardware. Downloaded audio files are stored on disk encrypted with AES-256-GCM under filenames generated by HMAC-SHA-256; plaintext audio bytes never touch the filesystem. Your display name (if shared via Sign in with Apple) is stored in standard application preferences (`UserDefaults`) rather than the Keychain — we treat it as personal information but not as a security credential, since it cannot be used to impersonate you or access any account.
+- **At rest on your device — Android:** Sensitive information (your auth tokens, activation code, device identifier) is stored in `EncryptedSharedPreferences`, backed by the Android Keystore. Keys are 256-bit AES-GCM managed by Google's Tink library; the underlying key material is hardware-bound on devices that support the Android Keymaster HAL. Downloaded audio files are stored on disk encrypted with AES-256-GCM under filenames generated by HMAC-SHA-256; plaintext audio bytes never touch the filesystem. This matches the iOS implementation byte-for-byte. Your display name (if shared via Sign in with Apple) is stored in standard Jetpack DataStore preferences rather than `EncryptedSharedPreferences`, for the same reason as the iOS treatment.
+- **At rest on our servers:** Supabase encrypts data at rest. Access to the database is restricted to the operator and is gated behind row-level security policies and a service-role key that is never embedded in the App. Your display name, when saved to Supabase, lives in the `user_metadata` field of your `auth.users` record; this field is only readable by you (via your authenticated session) and by the operator.
 - **Authentication:** Sign in with Apple uses asymmetric cryptographic proofs (nonces + identity tokens) — Apple authenticates you, not us. We never see or store any password.
 
 No security measure is perfect. If we discover a breach affecting your information, we will notify you and the appropriate authorities within the timeframes required by applicable law.
@@ -142,7 +143,7 @@ The Apple App Store and Google Play enforce age ratings independently. The Apple
 
 We retain personal information only as long as needed to operate the App or to meet a legal obligation:
 
-- **Sign in with Apple records** (Apple user identifier, email): retained as long as you have an active account. If you have not used the App for **24 months**, we may delete your account record. You can request deletion sooner at any time.
+- **Sign in with Apple records** (Apple user identifier, email, display name if you shared it): retained as long as you have an active account. If you have not used the App for **24 months**, we may delete your account record. You can request deletion sooner at any time. If you ever want only your display name deleted without deleting the account, email us at the address in Section 12 and we will clear the `user_metadata.full_name` field; this will cause the App to ask you to type a name once in onboarding on your next session.
 - **Subscription state**: managed by Apple on iOS and Google on Android, not us. Each platform's retention is governed by its own privacy policy.
 - **Activation code redemption records**: retained as long as the code's entitlement is active (typically the trial duration), plus 12 months for refund / dispute handling, then deleted.
 - **In-app-purchase receipt records**: retained as long as the subscription is active, plus 12 months for refund / dispute handling, then deleted.
